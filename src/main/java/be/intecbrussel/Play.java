@@ -14,19 +14,24 @@ import java.time.LocalDate;
 
 public class Play {
     public static void main(String[] args) {
-        // client - order - products
-        // client can have multiple addresses
-        // address can have multiple clients
+        // Data-Classes needed: Client - Address - Order - Products
+        // client / address:
+            // client can have multiple addresses
+            // address can hold multiple clients
+            // ManyToMany
+        // client / order:
+            // client can have multiple orders
+            // order(s) can have 1 client
+            // OneToMany - ManyToOne
+        // address / order
+            // address can have multiple orders
+            // order(s) can have 1 address
+            // OneToMany / ManyToOne
+        // order / product
+            // order can have multiple product-lines
+            // product-line(s) can have 1 order
+            // OneToMany - ManyToOne
 
-        // create order - set attributes like client, address, products
-        // 1 client can have multiple orders - OneToMany / ManyToOne
-        // 1 order can have 1 client only - OneToOne
-        // 1 client can have multiple addresses - 1 address can have multiple
-        // clients >> ManyToMany
-        // 1 order can have multiple productLINES - 1 productLINE can belong
-        // to 1 order only >> OneToMany / ManyToOne
-
-        // classes needed: Client, Address, Order, Product
         EntityManager em = EntityManagerProvider.getEntityManager();
 
         Client newClient = new Client();
