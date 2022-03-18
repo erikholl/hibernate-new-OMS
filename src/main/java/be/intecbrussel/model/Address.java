@@ -14,6 +14,7 @@ public class Address {
     private List<Order> addressOrderList;
 
     @ManyToMany
+//    @JoinTable(name = "address_client_table")
     private List<Client> clientList;
 
     @Column(name = "street_name")
@@ -35,48 +36,54 @@ public class Address {
         return id;
     }
 
-    public void setId(int id) {
+    public Address setId(int id) {
         this.id = id;
+        return this;
     }
 
     public String getStreetName() {
         return streetName;
     }
 
-    public void setStreetName(String streetName) {
+    public Address setStreetName(String streetName) {
         this.streetName = streetName;
+        return this;
     }
 
     public int getHouseNr() {
         return houseNr;
     }
 
-    public void setHouseNr(int houseNr) {
+    public Address setHouseNr(int houseNr) {
         this.houseNr = houseNr;
+        return this;
     }
 
     public String getHouseNrSub() {
         return houseNrSub;
     }
 
-    public void setHouseNrSub(String houseNrSub) {
+    public Address setHouseNrSub(String houseNrSub) {
         this.houseNrSub = houseNrSub;
+        return this;
     }
 
     public int getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(int zipCode) {
+    public Address setZipCode(int zipCode) {
         this.zipCode = zipCode;
+        return this;
     }
 
     public String getCityName() {
         return cityName;
     }
 
-    public void setCityName(String cityName) {
+    public Address setCityName(String cityName) {
         this.cityName = cityName;
+        return this;
     }
 
     @Override

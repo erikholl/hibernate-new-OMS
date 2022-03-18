@@ -14,13 +14,14 @@ public class Order {
     @Column(name = "order_number")
     private String orderNr;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+//    @JoinColumn(name = "order_client")
     private Client client;
 
-    @OneToMany(mappedBy = "productOrder")
+    @OneToMany(mappedBy = "productOrder", cascade = CascadeType.PERSIST)
     private List<Product> orderProductList;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Address delivery_address;
 
     @Column(name = "is_vat_free")
@@ -36,16 +37,18 @@ public class Order {
         return id;
     }
 
-    public void setId(int id) {
+    public Order setId(int id) {
         this.id = id;
+        return this;
     }
 
     public String getOrderNr() {
         return orderNr;
     }
 
-    public void setOrderNr(String orderNr) {
+    public Order setOrderNr(String orderNr) {
         this.orderNr = orderNr;
+        return this;
     }
 
     public Client getClient() {
@@ -57,36 +60,49 @@ public class Order {
         return this;
     }
 
+    public List<Product> getOrderProductList() {
+        return orderProductList;
+    }
+
+    public Order setOrderProductList(List<Product> orderProductList) {
+        this.orderProductList = orderProductList;
+        return this;
+    }
+
     public Address getDelivery_address() {
         return delivery_address;
     }
 
-    public void setDelivery_address(Address deliveryAddress) {
+    public Order setDelivery_address(Address deliveryAddress) {
         this.delivery_address = deliveryAddress;
+        return this;
     }
 
     public boolean isVatFree() {
         return vatFree;
     }
 
-    public void setVatFree(boolean vatFree) {
+    public Order setVatFree(boolean vatFree) {
         this.vatFree = vatFree;
+        return this;
     }
 
     public boolean isSent() {
         return isSent;
     }
 
-    public void setSent(boolean sent) {
+    public Order setSent(boolean sent) {
         isSent = sent;
+        return this;
     }
 
     public Date getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public Order setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
+        return this;
     }
 
     @Override

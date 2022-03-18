@@ -1,16 +1,16 @@
 package be.intecbrussel.model;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
-@Table(name = "order_product_table")
+@Table(name = "product_table")
 public class Product {
     @Id
     @GeneratedValue
     private int id;
 
     @ManyToOne
+//    @JoinColumn(name = "product_line_order")
     private Order productOrder;
 
     @Column(name = "product_name")
@@ -19,14 +19,15 @@ public class Product {
     private int amount;
 
     @Column (name = "price_per_unit")
-    private BigDecimal pricePerUnit;
+    private double pricePerUnit;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public Product setId(int id) {
         this.id = id;
+        return this;
     }
 
     public Order getProductOrder() {
@@ -42,24 +43,27 @@ public class Product {
         return productName;
     }
 
-    public void setProductName(String productName) {
+    public Product setProductName(String productName) {
         this.productName = productName;
+        return this;
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public Product setAmount(int amount) {
         this.amount = amount;
+        return this;
     }
 
-    public BigDecimal getPricePerUnit() {
+    public double getPricePerUnit() {
         return pricePerUnit;
     }
 
-    public void setPricePerUnit(BigDecimal pricePerUnit) {
+    public Product setPricePerUnit(double pricePerUnit) {
         this.pricePerUnit = pricePerUnit;
+        return this;
     }
 
     @Override

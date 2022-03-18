@@ -15,7 +15,12 @@ public class Client {
     private List<Order> orderList;
 
     @ManyToMany
+//    @JoinTable(name = "client_address_table")
     private List<Address> addressList;
+
+    @Column(name = "client_salutation")
+    @Enumerated(EnumType.STRING)
+    private Salutation salutation;
 
     @Column(name = "client_first_name")
     private String firstName;
@@ -33,46 +38,61 @@ public class Client {
         return id;
     }
 
-    public void setId(int id) {
+    public Client setId(int id) {
         this.id = id;
+        return this;
+    }
+
+    public Salutation getSalutation() {
+        return salutation;
+    }
+
+    public Client setSalutation(Salutation salutation) {
+        this.salutation = salutation;
+        return this;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public Client setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public Client setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public Client setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public Client setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
+                ", salutation=" + salutation +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
