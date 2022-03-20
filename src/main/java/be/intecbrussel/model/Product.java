@@ -75,4 +75,6 @@ public class Product {
                 ", pricePerUnit=" + pricePerUnit +
                 '}';
     }
+
+    // TODO: equals and hash
 }

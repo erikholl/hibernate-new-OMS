@@ -115,4 +115,6 @@ public class Order {
                 ", orderDate=" + orderDate +
                 '}';
     }
+
+    // TODO: equals and hash
 }

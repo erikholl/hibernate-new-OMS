@@ -2,6 +2,7 @@ package be.intecbrussel.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "address_table")
@@ -96,5 +97,23 @@ public class Address {
                 ", zipCode=" + zipCode +
                 ", cityName='" + cityName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address)) return false;
+        Address address = (Address) o;
+        return getHouseNr() == address.getHouseNr() && getZipCode() == address.getZipCode() && getStreetName().equals(
+                address.getStreetName()) && Objects.equals(
+                getHouseNrSub(),
+                address.getHouseNrSub()) && getCityName().equals(
+                address.getCityName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStreetName(), getHouseNr(), getHouseNrSub(),
+                            getZipCode(), getCityName());
     }
 }
