@@ -1,5 +1,8 @@
 package be.intecbrussel.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -18,19 +21,28 @@ public class Address {
 //    @JoinTable(name = "address_client_table")
     private List<Client> clientList;
 
+    // mandatory for an order - null not allowed
     @Column(name = "street_name")
     private String streetName;
 
+    // mandatory for an order - null not allowed
     @Column(name = "house_nr")
     private int houseNr;
 
     @Column(name = "house_nr_sub")
     private String houseNrSub;
 
+    // validation rules:
+    // 4 digits, between 1000 and 9999
+    // mandatory for an order - null not allowed
     @Column(name = "zip_code")
+    @NotNull
+    @Size(min = 1000, max = 9999)
     private int zipCode;
 
+    // mandatory for an order - null not allowed
     @Column(name = "city_name")
+//    @NotNull
     private String cityName;
 
     public int getId() {

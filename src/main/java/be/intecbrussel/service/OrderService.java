@@ -26,7 +26,7 @@ public class OrderService {
         orderToSave.setDelivery_address(findAddress(newAddress));
 
         orderToSave.setOrderProductList(pList)
-                .setOrderNr("ORD-202203-0095")
+                .setOrderNr(orderNrGenerator())
                 .setSent(false)
                 .setVatFree(false) // TODO: implement country table
                 .setOrderDate(Date.valueOf(LocalDate.now()));
@@ -78,5 +78,25 @@ public class OrderService {
                                        "address record created!");
         }
         return existingAddress == null ? newAddress : existingAddress;
+    }
+
+    private String orderNrGenerator() {
+        StringBuilder sb = new StringBuilder("ORD-");
+        Order lastOrder;
+
+        try {
+            lastOrder = orderDAO.lastOrder();
+        } catch (NoResultException nre) {
+            // if arriving in catch, init orderNr is needed: ORD-yyyyMM-0001
+            OrderNumberHelper helper = new OrderNumberHelper();
+            return "ORD-" + helper.orderNrDatePrefix() + "-0001";
+        }
+        // if lastOrder is successfully created, catch is skipped and below
+        // lines are executed
+        OrderNumberHelper helper = new OrderNumberHelper();
+        helper.setLastOrderDate(lastOrder.getOrderDate());
+        helper.setLastOrderNrSeq(lastOrder.getOrderNr().substring(11));
+
+        return helper.generateOrderNr();
     }
 }

@@ -11,9 +11,9 @@ import java.util.List;
 /*
 TODO:
  - update joinColumn / joinTable names in DB - NO SUCCESS, INVESTIGATE
+ - add validation for entity classes
  - add update order method
  - add additional methods (check user, check orders not sent, ..)
- - add ordernr generator method
  - convert zipCode to String
  - add convertor for salutation enum
  - embed a file with login details in persistence.xml
@@ -38,24 +38,24 @@ public class Play {
         System.out.println("*********** SAVE ORDER ***********");
         Client newClient = new Client();
         newClient.setSalutation(Salutation.MR)
-                .setFirstName("Wassily")
-                .setLastName("Kandinsky")
-                .setEmail("kando@brightcolors.org")
-                .setPassword("abstract11");
+                .setFirstName("Jan")
+                .setLastName("VandePopeleere")
+                .setEmail("merci@nestle.com")
+                .setPassword("bourgondie");
 
         Address newAddress = new Address();
-        newAddress.setStreetName("Stavenue")
-                .setHouseNr(3)
+        newAddress.setStreetName("Kerkplein")
+                .setHouseNr(2)
 //                .setHouseNrSub("II")
-                .setZipCode(0xAABBCC)
-                .setCityName("St. Petersburg");
+                .setZipCode(1111)
+                .setCityName("Kappenou");
 
         Product newP1 = new Product();
-        newP1.setProductName("pigment blue").setAmount(6).setPricePerUnit(1.01);
+        newP1.setProductName("vlonders").setAmount(4).setPricePerUnit(23.5);
         Product newP2 = new Product();
-        newP2.setProductName("roller").setAmount(3).setPricePerUnit(4.04);
+        newP2.setProductName("terrastegel x 10").setAmount(2).setPricePerUnit(19.95);
         Product newP3 = new Product();
-        newP3.setProductName("pigment dutch orange").setAmount(5).setPricePerUnit(3.99);
+        newP3.setProductName("zak aarde").setAmount(4).setPricePerUnit(10);
 
         newOrderProductList.add(newP1);
         newOrderProductList.add(newP2);
@@ -64,10 +64,10 @@ public class Play {
         os.saveOrder(newClient, newAddress, newOrderProductList);
 
         System.out.println("*********** READ ORDER ***********");
-        os.readOrder("ORD-202203-0097");
-
+        os.readOrder("ORD-202203-0001");
+//
         System.out.println("*********** FIND CLIENT BY EMAIL / PW ***********");
-        os.findClientByEmailAndPw("ooze@fluid.h2", "woosh32");
+        os.findClientByEmailAndPw("terrier@asiel.bb", "woef");
 
     }
 }

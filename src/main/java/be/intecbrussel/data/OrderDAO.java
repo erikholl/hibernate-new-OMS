@@ -75,6 +75,14 @@ public class OrderDAO {
         return tq.getSingleResult();
     }
 
+    // TODO: throw exception (and handle >> should only occur if there are no
+    //  orders)
+    public Order lastOrder() throws NoResultException {
+        String jpql = "SELECT o FROM Order o ORDER BY o.id desc";
+        TypedQuery<Order> tq = em.createQuery(jpql, Order.class);
+        return tq.getSingleResult();
+    }
+
     // alternative read
 //    public Order readOrder2(int id) {
 //        return em.find(Order.class, id);
