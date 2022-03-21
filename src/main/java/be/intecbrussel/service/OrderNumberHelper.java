@@ -42,7 +42,6 @@ public class OrderNumberHelper {
         return currentMonth != monthLastOrder;
     }
 
-    // protected because used in catch block of orderService
     protected String orderNrDatePrefix() {
         StringBuilder sb = new StringBuilder();
         sb.append(now.toLocalDate().getYear());

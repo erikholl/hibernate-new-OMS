@@ -1,5 +1,7 @@
 package be.intecbrussel.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -33,16 +35,16 @@ public class Address {
     private String houseNrSub;
 
     // validation rules:
-    // 4 digits, between 1000 and 9999
+    // 4 digits, between 1000 and 9999 (Belgian zipCode)
     // mandatory for an order - null not allowed
     @Column(name = "zip_code")
     @NotNull
-    @Size(min = 1000, max = 9999)
+    @Range(min = 1000, max = 9999)
     private int zipCode;
 
     // mandatory for an order - null not allowed
     @Column(name = "city_name")
-//    @NotNull
+    @NotNull
     private String cityName;
 
     public int getId() {

@@ -1,10 +1,8 @@
 package be.intecbrussel.view;
 
-import be.intecbrussel.data.EntityManagerProvider;
 import be.intecbrussel.model.*;
 import be.intecbrussel.service.OrderService;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,6 @@ TODO:
  - add additional methods (check user, check orders not sent, ..)
  - convert zipCode to String
  - add convertor for salutation enum
- - embed a file with login details in persistence.xml
  - remove unnecessary getters/setters
  Functionalities:
         // create order new client - X
@@ -37,37 +34,41 @@ public class Play {
 
         System.out.println("*********** SAVE ORDER ***********");
         Client newClient = new Client();
-        newClient.setSalutation(Salutation.MR)
-                .setFirstName("Jan")
-                .setLastName("VandePopeleere")
-                .setEmail("merci@nestle.com")
-                .setPassword("bourgondie");
+        newClient.setSalutation(Salutation.MRS)
+                .setFirstName("Sofia")
+                .setLastName("Gubaidulina")
+                .setEmail("orthodoxsound@russiansrebels.org")
+                .setPassword("sevenwords");
 
         Address newAddress = new Address();
-        newAddress.setStreetName("Kerkplein")
-                .setHouseNr(2)
-//                .setHouseNrSub("II")
-                .setZipCode(1111)
-                .setCityName("Kappenou");
+        newAddress.setStreetName("Mowglistreet")
+                .setHouseNr(1)
+//                .setHouseNrSub("b")
+                .setZipCode(1234)
+                .setCityName("Kristopol");
 
         Product newP1 = new Product();
-        newP1.setProductName("vlonders").setAmount(4).setPricePerUnit(23.5);
+        newP1.setProductName("dreamcatcher").setAmount(2).setPricePerUnit(6);
         Product newP2 = new Product();
-        newP2.setProductName("terrastegel x 10").setAmount(2).setPricePerUnit(19.95);
+        newP2.setProductName("tuning fork").setAmount(1).setPricePerUnit(99);
         Product newP3 = new Product();
-        newP3.setProductName("zak aarde").setAmount(4).setPricePerUnit(10);
+        newP3.setProductName("scratching post").setAmount(1).setPricePerUnit(21);
+//        Product newP4 = new Product();
+//        newP4.setProductName("kalsleren sportstoel").setAmount(2).setPricePerUnit(1200);
 
         newOrderProductList.add(newP1);
         newOrderProductList.add(newP2);
         newOrderProductList.add(newP3);
+//        newOrderProductList.add(newP4);
 
         os.saveOrder(newClient, newAddress, newOrderProductList);
 
         System.out.println("*********** READ ORDER ***********");
         os.readOrder("ORD-202203-0001");
+        os.readOrder("ORD-202203-0000"); // TODO: output m when not found
 //
-        System.out.println("*********** FIND CLIENT BY EMAIL / PW ***********");
-        os.findClientByEmailAndPw("terrier@asiel.bb", "woef");
+//        System.out.println("*********** FIND CLIENT BY EMAIL / PW ***********");
+//        os.findClientByEmailAndPw("terrier@asiel.bb", "woef");
 
     }
 }

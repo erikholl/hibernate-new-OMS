@@ -80,7 +80,7 @@ public class OrderDAO {
     public Order lastOrder() throws NoResultException {
         String jpql = "SELECT o FROM Order o ORDER BY o.id desc";
         TypedQuery<Order> tq = em.createQuery(jpql, Order.class);
-        return tq.getSingleResult();
+        return tq.setMaxResults(1).getSingleResult();
     }
 
     // alternative read
