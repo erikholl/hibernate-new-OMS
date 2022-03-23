@@ -44,6 +44,22 @@ public class Client {
         return this;
     }
 
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
+    }
+
+    public List<Address> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
+    }
+
     public Salutation getSalutation() {
         return salutation;
     }

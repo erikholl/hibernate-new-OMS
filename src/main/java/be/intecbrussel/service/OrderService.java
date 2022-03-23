@@ -16,15 +16,11 @@ public class OrderService {
 
     public void saveOrder(Client newClient, Address newAddress, List<Product> pList) {
         Order orderToSave = new Order();
-
-        // complete product-list with FK order id
         for (Product p : pList) {
             p.setProductOrder(orderToSave);
         }
-
         orderToSave.setClient(findClient(newClient));
         orderToSave.setDelivery_address(findAddress(newAddress));
-
         orderToSave.setOrderProductList(pList)
                 .setOrderNr(orderNrGenerator())
                 .setSent(false)
@@ -33,50 +29,110 @@ public class OrderService {
         orderDAO.saveOrder(orderToSave);
     }
 
-    public void readOrder(String orderNr) {
-        List<Order> orderList = orderDAO.readOrder(orderNr);
+    public void getOrderByOrderNr(String orderNr) {
+        Order order = findSingleOrder(orderNr);
+        if (order != null) { printOrderDetails(order); }
+    }   // if null, exception already handled in findSingleOrder
 
-        for (Order o : orderList) {
-            System.out.println(o);
-            System.out.println(o.getClient());
-            System.out.println(o.getDelivery_address());
-            List<Product> productList = o.getOrderProductList();
-            for (Product p : productList) {
-                System.out.println(p);
+    public void getOrdersNotSent() {
+        try {
+            List<Order> orderList = orderDAO.findOrdersNotSent();
+            for (Order o : orderList) {
+                System.out.println("Order with nr " + o.getOrderNr() + " is " +
+                                           "not yet sent. Details of the order:");
+                printOrderDetails(o);
+                System.out.println("- - - - - -");
             }
+        } catch (NoResultException nre) {
+            System.out.println("all orders are sent!");
         }
     }
 
-    public void findClientByEmailAndPw(String email, String pw) {
-        Client verifiedClient;
-        try {
-            verifiedClient = orderDAO.findClientByEmailAndPw(email, pw);
-            System.out.println(verifiedClient);
-        } catch (NoResultException nre) {
-            System.out.println("username and/or password incorrect - client " +
-                                       "not found!");
+    public void updateOrderNotSentToSent(String orderNr) {
+        Order orderToUpdate = findSingleOrder(orderNr);
+
+        if (orderToUpdate != null) {
+            System.out.println(
+                    "Order details prior to update: " + orderToUpdate);
+            orderToUpdate.setSent(true);
+            System.out.println(
+                    "Order details after update: "
+                            + orderDAO.updateOrderNotSentToSent(orderToUpdate).toString());
         }
+    }
+
+    public void getClientByEmailAndPw(String email, String password) {
+        Client existingClient = findClientByEmailAndPw(email, password);
+
+        if (existingClient != null) {
+            printClientDetails(existingClient);
+        }
+    }
+
+    public void getClientByEmail(String email) {
+        Client existingClient = findClientByEmail(email);
+
+        if (existingClient != null) {
+            printClientDetails(existingClient);
+        }
+
+    }
+    private Client findClientByEmail(String email) {
+        Client existingClient = null;
+        try {
+            existingClient = orderDAO.findClientByEmail(email);
+        } catch (NoResultException nre) {
+            System.out.println("client with email " + email + " not found.");
+        }
+        return existingClient;
+    }
+
+    private Client findClientByEmailAndPw(String email, String pw) {
+        Client existingClient = null;
+
+        try {
+            existingClient = orderDAO.findClientByEmailAndPw(email, pw);
+        } catch (NoResultException nre) {
+            System.out.println(
+                    "email and/or password incorrect - client not found!");
+        }
+        return existingClient;
+    }
+
+    private Order findSingleOrder(String orderNr) throws NoResultException {
+        Order existingOrder = null;
+        try {
+            existingOrder = orderDAO.findSingleOrder(orderNr);
+        } catch (NoResultException nre) {
+            System.out.println("no order found with orderNr: " + orderNr);
+        }
+        return existingOrder;
     }
 
     private Client findClient(Client newClient) {
         Client existingClient = null;
+
         try {
             existingClient = orderDAO.findClient(newClient);
         } catch (NoResultException nre) {
-            System.out.println("client did not yet exist in DB >> new client " +
-                                       "record created!");
+            System.out.println(
+                    "client did not yet exist in DB >> new client " +
+                            "record created!");
         }
+
         return existingClient == null ? newClient : existingClient;
     }
 
     private Address findAddress(Address newAddress) {
         Address existingAddress = null;
+
         try {
             existingAddress = orderDAO.findAddress(newAddress);
         } catch (NoResultException nre) {
             System.out.println("address did not yet exist in DB >> new " +
                                        "address record created!");
         }
+
         return existingAddress == null ? newAddress : existingAddress;
     }
 
@@ -91,12 +147,71 @@ public class OrderService {
             OrderNumberHelper helper = new OrderNumberHelper();
             return "ORD-" + helper.orderNrDatePrefix() + "-0001";
         }
-        // if lastOrder is successfully created, catch is skipped and below
-        // lines are executed
+        // below lines won't be executed if nre is caught due to return in catch
         OrderNumberHelper helper = new OrderNumberHelper();
         helper.setLastOrderDate(lastOrder.getOrderDate());
         helper.setLastOrderNrSeq(lastOrder.getOrderNr().substring(11));
 
         return helper.generateOrderNr();
+    }
+
+    private void printOrderDetails(Order order) {
+        System.out.println(order);
+        printClient(order.getClient());
+        printAddress(order.getDelivery_address());
+        printProduct(order.getOrderProductList());
+    }
+
+    private void printClientDetails(Client client) {
+        System.out.println(client);
+        printAddress(client.getAddressList());
+        List<Order> orderList = client.getOrderList();
+        for (Order o : orderList) {
+            System.out.println(o);
+            List<Product> productList = o.getOrderProductList();
+            for (Product p : productList) {
+                System.out.println(p);
+            }
+        }
+    }
+
+    private void printOrder(List<Order> orderList) {
+        for (Order o : orderList) {
+            System.out.println(o);
+        }
+    }
+
+    private String printOrder(Order order) {
+        return order.toString();
+    }
+
+    private void printClient(List<Client> clientList) {
+        for (Client c : clientList) {
+            System.out.println(c);
+        }
+    }
+
+    private void printClient(Client client) {
+        System.out.println(client);
+    }
+
+    private void printAddress(List<Address> addressList) {
+        for (Address a : addressList) {
+            System.out.println(a);
+        }
+    }
+
+    private void printAddress(Address address) {
+        System.out.println(address);
+    }
+
+    private void printProduct(List<Product> productList) {
+        for (Product p : productList) {
+            System.out.println(p);
+        }
+    }
+
+    private void printProduct(Product product) {
+        System.out.println(product);
     }
 }

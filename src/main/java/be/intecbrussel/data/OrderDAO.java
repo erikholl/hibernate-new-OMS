@@ -19,12 +19,18 @@ public class OrderDAO {
 //        em.close(); TODO: move close outside of local methods
     }
 
-    // TODO: throw (and handle) exception
-    public List<Order> readOrder(String orderNr) {
+    public Order updateOrderNotSentToSent(Order orderToUpdate) {
+        em.getTransaction().begin();    // order collected with query from DB >>
+        Order updatedOrder = em.merge(orderToUpdate);
+        em.getTransaction().commit();   // managed state >> no persist needed
+        return updatedOrder;
+    }
+
+    public Order findSingleOrder(String orderNr) throws NoResultException {
         String jpql = "SELECT o FROM Order o WHERE o.orderNr = :orderNr";
         TypedQuery<Order> tq = em.createQuery(jpql, Order.class);
         tq.setParameter("orderNr", orderNr);
-        return tq.getResultList();
+        return tq.getSingleResult();
     }
 
     // TODO: throw (and handle) exception
@@ -36,9 +42,8 @@ public class OrderDAO {
     }
 
     // TODO: method >> provide order details with input Client
-    // TODO: method >> update order sent status
     // TODO: method >> update order product details (only when status not sent)
-    // TODO: method >> update address existing client
+    // TODO: method >> update (or add?) address existing client
 
     public Client findClientByEmailAndPw(String email, String password) throws NoResultException {
         String jpql = "SELECT c FROM Client c WHERE c.email =:email AND c" +
@@ -75,16 +80,21 @@ public class OrderDAO {
         return tq.getSingleResult();
     }
 
-    // TODO: throw exception (and handle >> should only occur if there are no
-    //  orders)
     public Order lastOrder() throws NoResultException {
         String jpql = "SELECT o FROM Order o ORDER BY o.id desc";
-        TypedQuery<Order> tq = em.createQuery(jpql, Order.class);
-        return tq.setMaxResults(1).getSingleResult();
+        return queryReturnSingleOrder(jpql);
     }
 
-    // alternative read
-//    public Order readOrder2(int id) {
-//        return em.find(Order.class, id);
-//    }
+    public List<Order> findOrdersNotSent() throws NoResultException {
+        String jpql = "SELECT o FROM Order o WHERE o.isSent = false";
+        return queryReturnOrderList(jpql);
+    }
+
+    private Order queryReturnSingleOrder(String jpql) throws NoResultException {
+        return em.createQuery(jpql, Order.class).setMaxResults(1).getSingleResult();
+    }
+
+    private List<Order> queryReturnOrderList(String jpql) throws NoResultException {
+        return em.createQuery(jpql, Order.class).getResultList();
+    }
 }
