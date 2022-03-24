@@ -58,6 +58,28 @@ public class OrderService {
             System.out.println(
                     "Order details after update: "
                             + orderDAO.updateOrderNotSentToSent(orderToUpdate).toString());
+            // TODO: not neat, to use orderToUpdate for updated order print...
+        }
+    }
+
+    public void updateProductInOrder(String orderNr, int productId,
+                                  String productName, int amount, double price) {
+        Order orderToUpdate = findSingleOrder(orderNr);
+
+        if (orderToUpdate.isSent()) {
+            System.out.println("order already sent, not possible to update!");
+        } else {
+            Product productToUpdate = findProductInOrder(orderNr, productId);
+            System.out.println("orderNr " + orderNr + " current details: " + orderToUpdate);
+            printProduct(orderToUpdate.getOrderProductList());
+
+            productToUpdate.setProductName(productName)
+                    .setAmount(amount)
+                    .setPricePerUnit(price);
+            Product updatedProduct = orderDAO.updateProductInOrder(productToUpdate);
+            Order orderUpdated = findSingleOrder(orderNr);
+            System.out.println("orderNr " + orderNr + " has updated product(s): " + orderUpdated.toString());
+            printProduct(orderUpdated.getOrderProductList());
         }
     }
 
@@ -76,6 +98,16 @@ public class OrderService {
             printClientDetails(existingClient);
         }
 
+    }
+
+    private Order findSingleOrder(String orderNr) throws NoResultException {
+        Order existingOrder = null;
+        try {
+            existingOrder = orderDAO.findSingleOrder(orderNr);
+        } catch (NoResultException nre) {
+            System.out.println("no order found with orderNr: " + orderNr);
+        }
+        return existingOrder;
     }
     private Client findClientByEmail(String email) {
         Client existingClient = null;
@@ -99,16 +131,6 @@ public class OrderService {
         return existingClient;
     }
 
-    private Order findSingleOrder(String orderNr) throws NoResultException {
-        Order existingOrder = null;
-        try {
-            existingOrder = orderDAO.findSingleOrder(orderNr);
-        } catch (NoResultException nre) {
-            System.out.println("no order found with orderNr: " + orderNr);
-        }
-        return existingOrder;
-    }
-
     private Client findClient(Client newClient) {
         Client existingClient = null;
 
@@ -121,6 +143,28 @@ public class OrderService {
         }
 
         return existingClient == null ? newClient : existingClient;
+    }
+
+    private Product findProductInOrder(String orderNr, int productId) {
+        Order existingOrder = null;
+        Product existingProductInOrder = null;
+
+        try {
+            existingOrder = findSingleOrder(orderNr);
+        } catch (NoResultException e) {
+            System.out.println("no order found with orderNr " + orderNr);
+        }
+
+        if (existingOrder != null) {
+            try {
+                existingProductInOrder = orderDAO.findProductInOrder(orderNr,
+                                                                     productId);
+            } catch (NoResultException e) {
+                System.out.println("productId " + productId + " not found in " +
+                                           "orderNr " + orderNr);
+            }
+        }
+        return existingProductInOrder;
     }
 
     private Address findAddress(Address newAddress) {

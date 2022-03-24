@@ -18,7 +18,7 @@ TODO:
         // create order new client - X
         // find / return client with email / pw - X
         // create order existing client - X
-        // update order products client side
+        // update order products client side - X
         // update order delivery status - X
         // change address existing client
         // read order with all details (client, address, products) - X
@@ -71,12 +71,18 @@ public class Play {
 
         System.out.println("****** UPDATE ORDER NOT SENT TO SENT ******");
         os.updateOrderNotSentToSent("ORD-202203-0002");
-//
+
         System.out.println("*********** FIND CLIENT BY EMAIL / PW ***********");
         os.getClientByEmailAndPw("terrier@asiel.bb", "woef");
 
         System.out.println("************* FIND CLIENT BY EMAIL *************");
         os.getClientByEmail("terrier@asiel.bb");
+
+        System.out.println("* UPDATE PRODUCT IN ORDER BY ORDERNR & PRODUCTID *");
+        os.updateProductInOrder("ORD-202203-0001", 4, "zeegroen", 3, 9.91);
+
+        System.out.println("******** FIND ORDERS PER CLIENT ********");
+
 
     }
 }

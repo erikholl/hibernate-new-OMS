@@ -3,6 +3,7 @@ package be.intecbrussel.data;
 import be.intecbrussel.model.Address;
 import be.intecbrussel.model.Client;
 import be.intecbrussel.model.Order;
+import be.intecbrussel.model.Product;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,10 +21,10 @@ public class OrderDAO {
     }
 
     public Order updateOrderNotSentToSent(Order orderToUpdate) {
-        em.getTransaction().begin();    // order collected with query from DB >>
-        Order updatedOrder = em.merge(orderToUpdate);
-        em.getTransaction().commit();   // managed state >> no persist needed
-        return updatedOrder;
+        em.getTransaction().begin();                    // order collected with
+        Order updatedOrder = em.merge(orderToUpdate);   // query from DB >>
+        em.getTransaction().commit();                   // managed state >>
+        return updatedOrder;                            // no persist needed
     }
 
     public Order findSingleOrder(String orderNr) throws NoResultException {
@@ -42,7 +43,6 @@ public class OrderDAO {
     }
 
     // TODO: method >> provide order details with input Client
-    // TODO: method >> update order product details (only when status not sent)
     // TODO: method >> update (or add?) address existing client
 
     public Client findClientByEmailAndPw(String email, String password) throws NoResultException {
@@ -90,11 +90,33 @@ public class OrderDAO {
         return queryReturnOrderList(jpql);
     }
 
+    public Product findProductInOrder(String orderNr, int productId) throws NoResultException {
+
+        String jpql = "SELECT p FROM Product p JOIN p.productOrder WHERE " +
+                "p.productOrder.orderNr =:orderNr and p.id =:productId";
+        TypedQuery<Product> tq = em.createQuery(jpql, Product.class);
+        tq.setParameter("productId", productId);
+        tq.setParameter("orderNr", orderNr);
+        return tq.getSingleResult();
+    }
+
+    public Product updateProductInOrder(Product productToUpdate) {
+        em.getTransaction().begin();
+        Product updatedProduct = em.merge(productToUpdate);
+        em.getTransaction().commit();
+        return updatedProduct;
+    }
+
     private Order queryReturnSingleOrder(String jpql) throws NoResultException {
         return em.createQuery(jpql, Order.class).setMaxResults(1).getSingleResult();
     }
 
     private List<Order> queryReturnOrderList(String jpql) throws NoResultException {
         return em.createQuery(jpql, Order.class).getResultList();
+    }
+
+    private int getOrderId(String orderNr) throws NoResultException {
+        String jpql = "SELECT o.id FROM Order o WHERE o.orderNr =:orderNr";
+        return em.createQuery(jpql, Integer.class).getSingleResult();
     }
 }
